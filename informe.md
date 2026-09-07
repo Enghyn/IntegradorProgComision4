@@ -7,8 +7,8 @@
 #Sintoma observable: Los atributos de la clase son accesibles directamente, lo que puede llevar a modificaciones no deseadas.
 
 ## 1B- Caso de los Getters y setters con lógica | Metodos de clase Lado |
-#Inversión: en este caso, si tiene sentido hacer los gettes y setters en python. Si bien se puede seguir accediendo a estos, ya que no son realmente
-privados, si es necesario hacerlos para poder controlar la logica interna de los mismos. Por ello usamos @property para el setter y @nombre_atributo.setter para el getter.
+#Inversión: en este caso, si tiene sentido hacer los getters y setters en python. Si bien se puede seguir accediendo a estos, ya que no son realmente
+privados, si es necesario hacerlos para poder controlar la lógica interna de los mismos. Por ello usamos @property para el getter y @nombre_atributo.setter para el setter.
 
 #Sintoma observable: Acceder a estos datos de manera python seria lado.longitud, y esta se mantendría con @property.
 En caso de usar getters y setters explicitos, la forma de llamarlos sería distinto, y se tendría que cambiar toda llamada a estos metodos.
@@ -24,8 +24,7 @@ En caso de usar getters y setters explicitos, la forma de llamarlos sería disti
 #Sintoma observable: Si no se llama al constructor de la clase padre, los atributos de la clase padre no se inicializan correctamente, lo que puede llevar a errores en tiempo de ejecución.
 
 ## 4- Sobrecarga de constructores | Constructor de Cuadrado |
-#Inversión: en Java, se puede hacer sobrecarga de constructores, pero en python no es posible. Para ello, creamos los constructores con classsmethod, con un init que llama al super y instancia con los 
-parametros, un classmethod que instancia con valorespor defecto y otro classmethod que instancia con los lados.
+#Inversión: en Java, la sobrecarga de constructores permite múltiples constructores con diferentes firmas. En Python no existe la sobrecarga; el patrón idiomático es usar classmethods como fábricas con nombres descriptivos (ej: @classmethod desde_lados(cls, lados)), o usar *args/**kwargs con lógica interna, pero preferiblemente con nombres explícitos para mayor claridad.
 
 #Sintoma observable: Si se intenta crear un objeto con diferentes conjuntos de parámetros, se puede obtener un error de tipo o un comportamiento inesperado.
 Además, es muy dificil de leer y mantener el código, ya que no se sabe que constructor se esta llamando.
