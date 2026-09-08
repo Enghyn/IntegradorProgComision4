@@ -1,3 +1,11 @@
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class Etiqueta:
+    texto: str
+
+
 class Figura:
     def __init__(self, nombre, color):
         self._nombre = nombre
@@ -9,8 +17,9 @@ class Figura:
 
 
 class Lado:
-    def __init__(self, longitud):
+    def __init__(self, longitud, etiqueta: Etiqueta | None = None):
         self._longitud = longitud
+        self._etiqueta = etiqueta
 
     @property
     def longitud(self):
@@ -21,6 +30,10 @@ class Lado:
         if valor <= 0:
             raise ValueError("La longitud debe ser positiva")
         self._longitud = valor
+
+    @property
+    def etiqueta(self):
+        return self._etiqueta
 
 
 class Poligono(Figura):
@@ -44,8 +57,22 @@ class Poligono(Figura):
     def agregar_observacion(self, texto):
         self._observaciones.append(texto)
 
-    def getLados(self):
+    def lados(self):
         return list(self._lados)
+
+
+class Taller:
+    def __init__(self):
+        self._poligonos = []
+
+    def recibir(self, poligono: Poligono):
+        self._poligonos.append(poligono)
+
+    def restaurar(self, poligono: Poligono):
+        self._poligonos.remove(poligono)
+
+    def inventario(self):
+        return list(self._poligonos)
 
 
 class Triangulo(Poligono):

@@ -1,6 +1,8 @@
 # Grupo: 
 # Comisión: 4
 
+## PARTE 1 Diagnostico de java-ismos
+
 ## 1A- Caso de los Getters preventivos sin lógica | Metodos de clase Figura | 
 #Inversión: en Java, creabamos los setters y getters porque no podiamos acceder a los atributos de la clase al hacerlos privados, pero en python no es necesario hacer esto, ya que podemos acceder a los atributos de la clase sin necesidad de hacer un getter o setter. Como no hay lógica en los getters y setters, no es necesario hacerlos, ya que no aportan nada a la clase.
 
@@ -51,3 +53,24 @@ Además, es muy dificil de leer y mantener el código, ya que no se sabe que con
 #Inversión: en Java, al retornar una coleccion, se expone la referencia a ella. En Python, al hacer return self._lados, se le entrega al cliente la lista original de la estructura de datos interna lo que rompe el encapsulamiento. Para evitar esto, siempre se debe devolver una copia list(self._lados) o una tupla inmutable.
 
 #Sintoma observable: El cliente puede hacer poligono.getLados().clear() o usar .pop() desde afuera del objeto y borrar los lados del polígono, destruyendo la coherencia del estado interno del objeto.
+
+## PARTE 2 Relaciones Estructurales Taller Etiqueta y Copias Defensivas
+
+### Implementacion de Clases y Relaciones
+Etiqueta implementada como dataclass frozen igual a True asegurando inmutabilidad.
+Lado incorpora el atributo opcional etiqueta de tipo Etiqueta o None igual a None representando la asociacion cero a uno.
+Poligono incluye el metodo lados que retorna list(self._lados) aplicando copia defensiva para la multiplicidad asterisco de la composicion Poligono Lado.
+Taller gestiona agregacion cero a muchos de poligonos mediante recibir, restaurar e inventario el cual retorna copia defensiva list(self._poligonos).
+
+### Pregunta
+Si la sintaxis de guardar la referencia es identica en los tres casos self._algo igual a algo, como se ve en el código la diferencia entre agregación y composición? Responde para las tres relaciones, señalando el contexto exacto que lo delata.
+
+### Respuesta
+1. Composicion entre Poligono y Lado:
+En el origen de los objetos componentes o en las fabricas, los objetos Lado son instanciados y creados internamente por el contenedor, ligando su ciclo de vida al poligono.
+
+2. Agregacion entre Taller y Poligono:
+En el metodo recibir del taller, este recibe un objeto polígono ya construido externamente mediante append. El taller no fabrica ni destruye los polígonos, solo los agrupa.
+
+3. Asociacion entre Lado y Etiqueta:
+En el constructor de Lado se asigna un objeto independiente recibido por parametro. No existe cocreacion ni dependencia de ciclo de vida.
