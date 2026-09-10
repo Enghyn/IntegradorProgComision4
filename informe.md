@@ -74,3 +74,14 @@ En el metodo recibir del taller, este recibe un objeto polígono ya construido e
 
 3. Asociacion entre Lado y Etiqueta:
 En el constructor de Lado se asigna un objeto independiente recibido por parametro. No existe cocreacion ni dependencia de ciclo de vida.
+
+## Parte 3 Herencia Justificada por Dominio
+Poligono se define como clase abstracta heredando de ABC, con el metodo abstracto @abstractmethod def lados_esperados(self) -> int:.
+Se implementan las subclases Triangulo (3), Cuadrado (4), Pentagono (5) y Hexagono (6), implementando cada una su lados_esperados().
+En el constructor de Poligono se valida que la cantidad de lados recibida coincida exactamente con self.lados_esperados(), levantando ValueError si no coincide.
+La falla temprana ocurre al intentar instanciar Poligono directamente o cualquier subclase sin lados_esperados(), lanzando TypeError en tiempo de instanciacion.
+
+### Decisión sobre PoligonoRegular
+#Inversión: En Java armábamos una clase PoligonoRegular para que el compilador nos deje meter polígonos regulares en una misma lista tipada. En Python eso no hace falta porque no tenemos un compilador exigiendo tipos. Además, por sentido común, un polígono regular no representa una figura distinta en la realidad, sino que es simplemente un triángulo o un cuadrado que tiene todos sus lados iguales.
+
+#Rediseño código: Sacamos PoligonoRegular de la herencia y en su lugar usamos @classmethod regular(...) adentro de cada figura (Triangulo, Cuadrado, etc.). Así, en vez de obligar al usuario a pasar una lista con todos los lados repetidos a mano, la propia clase se encarga de crear los lados iguales con la cantidad exacta que necesita, sin inventar clases intermedias al vicio.

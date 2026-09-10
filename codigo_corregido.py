@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
 
 
@@ -36,17 +37,22 @@ class Lado:
         return self._etiqueta
 
 
-class Poligono(Figura):
+class Poligono(Figura, ABC):
     def __init__(self, nombre, color, lados=None, observaciones=None):
         super().__init__(nombre, color)
         self._lados = list(lados) if lados else []
         self._observaciones = list(observaciones) if observaciones else []
+
+        if len(self._lados) != self.lados_esperados():
+            raise ValueError(f"{nombre} debe tener {self.lados_esperados()} lados")
+
         if not hasattr(Poligono, '_catalogo'):
             Poligono._catalogo = []
         Poligono._catalogo.append(self)
 
-    def lados_esperados(self):
-        return 0
+    @abstractmethod
+    def lados_esperados(self) -> int:
+        pass
 
     def perimetro(self):
         return sum(l.longitud for l in self._lados)
@@ -58,7 +64,7 @@ class Poligono(Figura):
         self._observaciones.append(texto)
 
     def lados(self):
-        return list(self._lados)
+        return tuple(self._lados)
 
 
 class Taller:
@@ -72,7 +78,7 @@ class Taller:
         self._poligonos.remove(poligono)
 
     def inventario(self):
-        return list(self._poligonos)
+        return tuple(self._poligonos)
 
 
 class Triangulo(Poligono):
@@ -86,6 +92,11 @@ class Triangulo(Poligono):
     @classmethod
     def por_defecto(cls):
         return cls("triángulo", "negro", [])
+
+    @classmethod
+    def regular(cls, nombre, color, longitud_lado):
+        lados = [Lado(longitud_lado) for _ in range(3)]
+        return cls(nombre, color, lados)
 
     def lados_esperados(self):
         return 3
@@ -103,5 +114,36 @@ class Cuadrado(Poligono):
     def por_defecto(cls):
         return cls("cuadrado", "negro", [])
 
+    @classmethod
+    def regular(cls, nombre, color, longitud_lado):
+        lados = [Lado(longitud_lado) for _ in range(4)]
+        return cls(nombre, color, lados)
+
     def lados_esperados(self):
         return 4
+
+
+class Pentagono(Poligono):
+    def __init__(self, nombre, color, lados):
+        super().__init__(nombre, color, lados)
+
+    @classmethod
+    def regular(cls, nombre, color, longitud_lado):
+        lados = [Lado(longitud_lado) for _ in range(5)]
+        return cls(nombre, color, lados)
+
+    def lados_esperados(self):
+        return 5
+
+
+class Hexagono(Poligono):
+    def __init__(self, nombre, color, lados):
+        super().__init__(nombre, color, lados)
+
+    @classmethod
+    def regular(cls, nombre, color, longitud_lado):
+        lados = [Lado(longitud_lado) for _ in range(6)]
+        return cls(nombre, color, lados)
+
+    def lados_esperados(self):
+        return 6
