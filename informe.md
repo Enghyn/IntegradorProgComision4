@@ -85,3 +85,40 @@ La falla temprana ocurre al intentar instanciar Poligono directamente o cualquie
 #Inversión: En Java armábamos una clase PoligonoRegular para que el compilador nos deje meter polígonos regulares en una misma lista tipada. En Python eso no hace falta porque no tenemos un compilador exigiendo tipos. Además, por sentido común, un polígono regular no representa una figura distinta en la realidad, sino que es simplemente un triángulo o un cuadrado que tiene todos sus lados iguales.
 
 #Rediseño código: Sacamos PoligonoRegular de la herencia y en su lugar usamos @classmethod regular(...) adentro de cada figura (Triangulo, Cuadrado, etc.). Así, en vez de obligar al usuario a pasar una lista con todos los lados repetidos a mano, la propia clase se encarga de crear los lados iguales con la cantidad exacta que necesita, sin inventar clases intermedias al vicio.
+
+## Parte 4: ABC vs. Protocol
+
+### 1. Implementación del contrato Exportable
+Para poder trabajar al mismo tiempo con las clases de nuestro código y con
+librerías externas, creamos el contrato `Exportable` usando `Protocol` con
+el método `exportar() -> str`. 
+
+Nuestra clase `Poligono`usa este método de forma directa. Por otro
+lado, la clase `PlanoCAD` (que viene de la librería externa y no la podemos
+tocar) ya tenía su propio método `exportar()`, así que cumple con el contrato
+automáticamente sin tener que modificarla. Gracias a esto, la función 
+`exportar_todo()` puede recibir una lista mezclada con polígonos y planos CAD
+y hacerlos funcionar a todos juntos en tiempo de ejecución.
+
+### 2. ¿Por qué no hubiéramos podido usar una ABC con PlanoCAD?
+Las clases abstractas (`ABC`) nos exigen usar herencia explícita en el código.
+Para que `PlanoCAD` funcionara con una ABC, tendríamos que haber entrado a su
+archivo y escribir `class PlanoCAD(Exportable)`. 
+
+Como la consigna nos prohibía modificar la librería externa, usar una ABC era
+imposible. En cambio, con `Protocol` no importa de dónde viene la clase ni de
+quién hereda: a Python solo le importa que el objeto tenga el método `exportar()`
+listo para usarse (duck typing).
+
+### 3. Elección entre ABC y Protocol: ¿Lo decide el lenguaje o el dominio?
+**Lo decide el dominio, no el lenguaje.**
+
+Python simplemente nos da las dos herramientas y nos deja elegir, pero la
+decisión depende de la lógica de lo que estamos modelando:
+- Usamos una **ABC** cuando existe una relación directa de "qué es" la clase.
+  Por ejemplo, un Triángulo **es un** Polígono, comparten comportamiento base
+  y queremos asegurarnos de que no se pueda crear uno incompleto.
+- Usamos un **Protocol** cuando hablamos de una "habilidad" o acción secundaria.
+  Exportar datos no define lo que es un objeto, sino algo que **sabe hacer**.
+  Por eso lo comparten clases que no tienen nada que ver entre sí, como un
+  Polígono de nuestro programa y un Plano CAD de una librería ajena.

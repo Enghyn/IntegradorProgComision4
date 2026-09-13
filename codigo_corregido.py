@@ -66,6 +66,10 @@ class Poligono(Figura, ABC):
     def lados(self):
         return tuple(self._lados)
 
+    def exportar(self) -> str:
+        return (f"Poligono[{self._nombre} | {self._color} | "
+                f"lados={len(self._lados)} | perimetro={self.perimetro()}]")
+
 
 class Taller:
     def __init__(self):
