@@ -1,4 +1,4 @@
-# Grupo: 
+# Grupo: Contardi Agustin, Giaquinta Enzo, Salcedo Ramiro, Sanchez Ignacio y Torrez Fernando
 # Comisión: 4
 
 ## PARTE 1 Diagnostico de java-ismos
